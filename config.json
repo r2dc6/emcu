@@ -1,0 +1,52 @@
+{
+  "simulation": false,
+  "gpio": {
+    "acu1": 16,
+    "acu1_2": 11,
+    "acu2": 9,
+    "acu2_2": 10,
+    "door": 24,
+    "water": 23,
+    "smoke": 25,
+    "dht": 4,
+    "alarm_water": 26,
+    "alarm_smoke": 19,
+    "alarm_temperature": 13,
+    "alarm_humidity": 6,
+    "alarm_door": 0
+  },
+  "output_active_high": {
+    "acu1": true,
+    "acu2": true,
+    "water": true,
+    "smoke": true,
+    "temperature": true,
+    "humidity": true,
+    "door": true
+  },
+  "input_active_high": {
+    "door": false,
+    "water": false,
+    "smoke": false
+  },
+  "input_pull": {
+    "door": "up",
+    "water": "up",
+    "smoke": "up"
+  },
+  "rotation_seconds": 3600.0,
+  "handover_overlap_seconds": 15.0,
+  "min_off_seconds": 0.0,
+  "boost_on_c": 27.0,
+  "boost_off_c": 25.0,
+  "high_temp_alarm_c": 27.0,
+  "high_humidity_alarm_pct": 100.0,
+  "door_alarm_seconds": 1.0,
+  "water_alarm_seconds": 0.0,
+  "smoke_alarm_seconds": 0.0,
+  "temperature_alarm_seconds": 0.0,
+  "humidity_alarm_seconds": 0.0,
+  "sensor_stale_seconds": 30.0,
+  "sensor_poll_seconds": 3.0,
+  "control_tick_seconds": 1.0
+}

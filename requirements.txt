@@ -1,0 +1,6 @@
+fastapi>=0.110,<1
+uvicorn>=0.29,<1
+pydantic>=2,<3
+gpiozero>=2,<3
+adafruit-circuitpython-dht>=4,<5
+PySide6>=6.5,<7

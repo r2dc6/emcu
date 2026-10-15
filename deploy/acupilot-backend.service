@@ -1,0 +1,38 @@
+# acuPilot backend - SYSTEM service, independent of the graphical user session.
+# Based on /etc/systemd/system/acupilot-backend.service.
+# Live installation/reload/restart requires explicit administrator approval.
+
+[Unit]
+Description=acuPilot ACU Automation Backend
+After=network.target
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+[Service]
+# Exec success is not API readiness; service control verifies /api/status.
+Type=exec
+User=rheg
+Group=rheg
+WorkingDirectory=/home/rheg/App
+
+# Pin one worker even if WEB_CONCURRENCY is set in the manager environment.
+# Bound HTTP draining so lifespan shutdown can attempt all seven outputs OFF
+# and release GPIO before the overall systemd stop deadline.
+ExecStart=/home/rheg/App/.venv/bin/python -m uvicorn main:app --host 127.0.0.1 --port 8000 --workers 1 --timeout-graceful-shutdown 20
+TimeoutStartSec=30
+TimeoutStopSec=30
+KillSignal=SIGTERM
+# Signal Uvicorn first; only force-kill the remaining cgroup after its deadline.
+KillMode=mixed
+SendSIGKILL=yes
+
+Restart=on-failure
+RestartSec=5
+
+Environment=PYTHONUNBUFFERED=1
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

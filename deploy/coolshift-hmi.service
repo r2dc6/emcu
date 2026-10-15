@@ -1,0 +1,38 @@
+# acuPilot HMI — systemd unit for Raspberry Pi kiosk session.
+#
+# NOTES:
+#   * Runs as the account owning the systemd user manager.
+#   * ExecStart points at the project venv: /home/rheg/App/.venv
+#     Verify the venv path before installing.
+#   * The HMI connects to the backend via COOLSHIFT_BACKEND_URL env (default
+#     http://127.0.0.1:8000). Bind the backend to localhost only and keep it
+#     on the same Pi, or add the env override below if remote.
+#   * This is a USER service (graphical session). Install with:
+#       systemctl --user enable coolshift-hmi.service
+#       systemctl --user start  coolshift-hmi.service
+#     Import the graphical session environment before starting (see README).
+
+[Unit]
+Description=acuPilot HMI (Kiosk Touchscreen)
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+Environment=DISPLAY=:0
+Environment=QT_QPA_PLATFORM=xcb
+WorkingDirectory=/home/rheg/App
+ExecStart=/home/rheg/App/.venv/bin/python /home/rheg/App/launch_hmi.py
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=10
+KillSignal=SIGTERM
+# Signal the launcher first; it forwards to its child and waits up to 8 seconds.
+# systemd kills remaining cgroup processes if the 10-second budget expires.
+KillMode=mixed
+
+# User service: avoid mount namespaces requiring privileged user-namespace support.
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=graphical-session.target
